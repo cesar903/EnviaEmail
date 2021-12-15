@@ -1,0 +1,107 @@
+<?php
+ require("includeOnce.php");
+?>
+<?php
+//Abre os chamados
+$chamados = [];
+//ABRE O ARQUIVO DE TEXTO E SALVA EM UMA VARIAVEL
+$arquivo = fopen('../../app_Help-Desk/arquivo.txt', 'r');
+
+//Enquanto houver registros no arquivo.txt ele continua no loop
+//A função feof testa o fim da execusao em diferentes arquivos, no caso o fim das linhas em arquivo txt
+//e o ! faz a inversão enquando for false pra continuar no true até receber true e inverter para false
+while(!feof($arquivo)){
+
+  //função fgets() função do php que recebe a referencia do arquivo
+  $registro = fgets($arquivo);
+  $chamados[]= $registro;
+}
+//Fecha o arquivo que foi aberto
+fclose($arquivo);
+
+?>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>App Help Desk</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <style>
+      .card-consultar-chamado {
+        padding: 30px 0 0 0;
+        width: 100%;
+        margin: 0 auto;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <nav class="navbar navbar-dark bg-dark">
+      <a class="navbar-brand" href="#">
+        <img src="logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
+        App Help Desk
+      </a>
+      <ul class="navbar-nav">
+        <li class="nav-item">
+        <!--o logoff manda pra pagina onde os dados serão excluidos -->
+          <a href="logoff.php" class="nav-link">ENCERRAR SESSÃO</a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="container">    
+      <div class="row">
+
+        <div class="card-consultar-chamado">
+          <div class="card">
+            <div class="card-header">
+              Consulta de chamado
+            </div>
+            
+            <div class="card-body">
+              
+              <?php
+                //A função foreach percorre todo o array
+                foreach($chamados as $chamado){ 
+                 
+                $chamado_dados =  explode('-', $chamado);
+
+                if($_SESSION['perfil'] == 2){
+                  //Se o perfil for de usuario, escondemos os filtros
+                  if($_SESSION['id'] != $chamado_dados[0]){
+                    continue;
+                  }
+
+                }
+
+                if(count($chamado_dados) < 3){
+                  //Faz a quebra de linha se os dados que possuir forem menos de 3
+                  continue;
+                }
+              ?>
+                  
+                  
+                <div class="card mb-3 bg-light">
+                  <div class="card-body">
+                    <h5 class="card-title"><?= $chamado_dados[1] ?></h5>
+                    <h6 class="card-subtitle mb-2 text-muted"><?= $chamado_dados[2] ?></h6>
+                    <p class="card-text"><?=  $chamado_dados[3] ?></p>
+
+                  </div>
+                </div>
+              <?php  }; ?>
+
+              <div class="row mt-5">
+                <div class="col-6">
+                  <a href="home.php" class="btn btn-lg btn-warning btn-block" type="submit">Voltar</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

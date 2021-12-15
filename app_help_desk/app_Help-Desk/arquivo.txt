@@ -1,0 +1,4 @@
+
+1-cesar-Hardware-não liga
+1-pedro-Impressora-imprime errado
+3-chamado id 3-Rede-sem net
